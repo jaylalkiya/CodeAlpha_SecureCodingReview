@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="card">
+  <h2>{{ note.title }}</h2>
+  <div style="white-space:pre-wrap">{{ note.content }}</div>
+  <form method="post" action="/note/{{ note.id }}/delete">
+    {{ csrf_field() }}
+    <button class="danger">DELETE</button>
+  </form>
+</div>
+<p><a href="/">&larr; back</a></p>
+{% endblock %}

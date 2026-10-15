@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.db
+vulnerable_app/files/
+secure_app/files/
+.pytest_cache/

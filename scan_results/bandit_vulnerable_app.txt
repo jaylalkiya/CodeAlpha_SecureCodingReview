@@ -1,0 +1,111 @@
+Run started:2026-10-15 08:57:03.702327+00:00
+
+Test results:
+>> Issue: [B403:blacklist] Consider possible security implications associated with pickle module.
+   Severity: Low   Confidence: High
+   CWE: CWE-502 (https://cwe.mitre.org/data/definitions/502.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b403-import-pickle
+   Location: vulnerable_app\app.py:14:0
+13	import os
+14	import pickle
+15	import sqlite3
+
+--------------------------------------------------
+>> Issue: [B404:blacklist] Consider possible security implications associated with the subprocess module.
+   Severity: Low   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_imports.html#b404-import-subprocess
+   Location: vulnerable_app\app.py:16:0
+15	import sqlite3
+16	import subprocess
+17	
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'notevault-dev-key-123'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: vulnerable_app\app.py:26:17
+25	app = Flask(__name__)
+26	app.secret_key = "notevault-dev-key-123"          # [V-01] hardcoded secret key
+27	ADMIN_PASSWORD = "admin123"                       # [V-01] hardcoded credential
+
+--------------------------------------------------
+>> Issue: [B105:hardcoded_password_string] Possible hardcoded password: 'admin123'
+   Severity: Low   Confidence: Medium
+   CWE: CWE-259 (https://cwe.mitre.org/data/definitions/259.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html
+   Location: vulnerable_app\app.py:27:17
+26	app.secret_key = "notevault-dev-key-123"          # [V-01] hardcoded secret key
+27	ADMIN_PASSWORD = "admin123"                       # [V-01] hardcoded credential
+28	
+
+--------------------------------------------------
+>> Issue: [B324:hashlib] Use of weak MD5 hash for security. Consider usedforsecurity=False
+   Severity: High   Confidence: High
+   CWE: CWE-327 (https://cwe.mitre.org/data/definitions/327.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b324_hashlib.html
+   Location: vulnerable_app\app.py:52:11
+51	def hash_password(password):
+52	    return hashlib.md5(password.encode()).hexdigest()   # [V-03] MD5, no salt
+53	
+
+--------------------------------------------------
+>> Issue: [B608:hardcoded_sql_expressions] Possible SQL injection vector through string-based query construction.
+   Severity: Medium   Confidence: Low
+   CWE: CWE-89 (https://cwe.mitre.org/data/definitions/89.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b608_hardcoded_sql_expressions.html
+   Location: vulnerable_app\app.py:95:17
+94	        # [V-02] SQL injection: user input pasted straight into the query
+95	        query = ("SELECT * FROM users WHERE username = '" + username +
+96	                 "' AND password = '" + hash_password(password) + "'")
+
+--------------------------------------------------
+>> Issue: [B602:subprocess_popen_with_shell_equals_true] subprocess call with shell=True identified, security issue.
+   Severity: High   Confidence: High
+   CWE: CWE-78 (https://cwe.mitre.org/data/definitions/78.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b602_subprocess_popen_with_shell_equals_true.html
+   Location: vulnerable_app\app.py:178:13
+177	    # [V-06] OS command injection: shell=True with user input
+178	    output = subprocess.run("ping -n 1 " + host, shell=True,
+179	                            capture_output=True, text=True, timeout=10).stdout
+180	    return render_template("tool.html", title="Ping", output=output)
+
+--------------------------------------------------
+>> Issue: [B301:blacklist] Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.
+   Severity: Medium   Confidence: High
+   CWE: CWE-502 (https://cwe.mitre.org/data/definitions/502.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/blacklists/blacklist_calls.html#b301-pickle
+   Location: vulnerable_app\app.py:199:12
+198	    # [V-08] insecure deserialization: pickle runs attacker code on load
+199	    notes = pickle.loads(base64.b64decode(blob))
+200	    for title, content in notes:
+
+--------------------------------------------------
+>> Issue: [B201:flask_debug_true] A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.
+   Severity: High   Confidence: Medium
+   CWE: CWE-94 (https://cwe.mitre.org/data/definitions/94.html)
+   More Info: https://bandit.readthedocs.io/en/1.9.4/plugins/b201_flask_debug_true.html
+   Location: vulnerable_app\app.py:227:4
+226	        init_db()
+227	    app.run(host="127.0.0.1", port=5000, debug=True)   # [V-12] debug mode on
+
+--------------------------------------------------
+
+Code scanned:
+	Total lines of code: 171
+	Total lines skipped (#nosec): 0
+	Total potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0
+
+Run metrics:
+	Total issues (by severity):
+		Undefined: 0
+		Low: 4
+		Medium: 2
+		High: 3
+	Total issues (by confidence):
+		Undefined: 0
+		Low: 1
+		Medium: 3
+		High: 5
+Files skipped (0):
